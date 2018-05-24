@@ -1,0 +1,200 @@
+#!/bin/sh
+
+###############################################################################
+export SYSTEM_TYPE=`python -u -c 'import platform;print(platform.system())'`
+
+export PATH=$PATH:$DIFOSS_ENV_BASE/my_cmd
+export WEB_PICK_SHELL=$(realpath $DIFOSS_ENV_BASE/../web_pick/shell_)
+
+if [ "$SYSTEM_TYPE" == "Windows" ] ; then
+
+    # Config Cygwin Here ------------------------------------
+    export CYGPATH=cygpath.exe
+
+    alias p='powershell -command "ps | head -3 ; ps |grep $*" ' # $* $@
+
+    # Set alias for *.bat of `Git/cmd` diretory
+    alias e='explorer `cygpath -w $PWD`'
+
+elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
+    export CYGPATH=echo
+    export PS1="\e[36;2m<\t> \e[32;2m[\u@\h] \e[35;2m\w\e[0m\n$ "
+
+    ## old version of 'p'
+    #alias p='echo -e "PID\tPPID\tCMD"; ps -eo "%P %p %c %a" -u $LOGNAME|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
+
+    alias p='ps -eo "%U %p %P %x %c %a"|head -1; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
+else
+    echo Unknown System Type !
+fi
+
+# if [ "$OSTYPE" == $"linux-gnu" ]; then          ######### linux-gnu system
+#    alias shutdown='echo'  # 防止错误关机
+# fi
+
+if [ "$TERM" == $"cygwin" ] && [ "$OSTYPE" == $"cygwin" ]; then  ##### cygwin, but not the original terminal
+    export PS1="\e[36;2m<\t> \e[32;2m[\u@\h] \e[35;2m\w\e[0m\n$ "
+fi
+
+if [ "$OSTYPE" == $"cygwin" ]; then              ##### cygwin, no matter it is the original terminal
+    # quik open explorer in $1 directory
+    alias e='_e() { if [ $# -ne 1 ]; then explorer .; else explorer `cygpath -d "$*"`; fi }; _e'
+fi
+###############################################################################
+
+# User specific aliases and functions
+
+export LC_CTYPE="zh_CN.UTF-8"
+
+# color flag effect `grep`, `ls` and so on...
+export COLOR_FLAG="auto"
+
+#### add default parameters to some command
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias vi='vim'
+alias ls="ls --show-control-chars --color=auto -A"
+alias l='ls --show-control-chars --color=auto -Ah'
+alias ll='ls --show-control-chars --color=auto -lAh'
+alias lll='ls --show-control-chars --color=auto -lA'
+alias grep='grep --color=$COLOR_FLAG'
+
+# Let `grep` highlight
+export GREP_COLOR="10;33"
+
+#### short command
+#alias r='perl $DIFOSS_ENV_BASE/run.pl'
+
+# short for 'Grep Include'
+alias check='valgrind --tool=memcheck --track-fds=yes --leak-check=full --show-leak-kinds=definite'
+ulimit -c unlimited
+
+###############################################################################
+# 查找相关
+# see config file
+alias seecfg='grep -P "^\s*[^#]+"'
+alias seecfgn='grep -nP "^\s*[^#]+"'
+alias seeenv='python $DIFOSS_ENV_BASE/see_env.py'
+
+alias gi="grep -naE '#\s*include'"
+
+alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+alias f.java='find . -type f -name "*.java" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+# find callback
+alias f.cb='find_callback(){ str="[>\.]+\s*"$@"\s*\("; find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnP --color=$COLOR_FLAG $str; }; find_callback'
+# find call
+alias f.call='find_call(){ str="[^a-zA-Z_]+"$@"\s*\("; find . -type f -print0 | grep --color=no -zaE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnp --color=$COLOR_FLAG $str; }; find_call'
+
+# find in implementation files of C/C++ ( file suffix: cpp,c,cxx,cc,C )
+alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+# find in header of header files of C/C++ ( file suffix: h,hpp,hxx )
+alias f.h='find . -type f -print0 | grep --color=no -zaiE ".*\.(hpp|h|hh|hxx)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+# find in makefiles ( file name: M/makefile, *.mk, *.mak )
+alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
+
+#---------------------------
+alias f.syslog="find /var/log -type f -name 'syslog' | xargs grep -aH --color=\$COLOR_FLAG"
+#alias cl.syslog="cp /var/log/syslog /var/log/syslog-`date +%Y-%m-%d`.bak; cat /dev/null > /var/log/syslog"
+alias f.log='find . -type f -name "*.log" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.ini='find . -type f -print0 | grep --color=no -zaiE ".*\.(conf|ini)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+alias f.php='find . -type f -name "*.php" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.sql='find . -type f -name "*.sql" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.md='find . -type f -name "*.md" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.pb='find . -type f -print0 | grep --color=no -zaiE "(\.proto$)" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+alias f.js='find . -type f -print0 | grep --color=no -zaiE ".*\.(js|ts)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+alias f.go='find . -type f -print0 | grep --color=no -zaiE ".*\.(go)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+
+# Set default `f` for MOST quickly find
+alias f 2<&- 1<&-
+if [ $? -eq 1 ]; then
+    alias f=f.c++
+fi
+
+#---------------------------
+## <need other files>
+# find symbol in *.*o
+alias f.o="find . -type f -name '*.*o' |awk '{printf (\"nm -A \047%s\047 |cat -n\n\", \$0) }'|sh|grep -a --color=\$COLOR_FLAG"
+# read symbol in *.*o (transfer 'low-level name' into 'C++ readable name' by <find_symbol_in_so.pl>)
+alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pl'
+# Provider: https://github.com/zeroleo12345
+alias ff='python $DIFOSS_ENV_BASE/ff.py'
+
+#---------------------------
+# find py
+alias pyf='find -type f -name "*.py" -print0 |xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.py='pyf'
+# find function defination in py
+alias pyfn='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*def\s+" |grep -0 --color=$COLOR_FLAG'
+# find function calling in py
+alias pyfc='find -type f -name "*.py" -print0 |xargs -0 grep -anvE "^\s*def\s+" |grep -0 --color=$COLOR_FLAG'
+alias pyc='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*class\s+" |grep -0 --color=$COLOR_FLAG'
+
+alias pyhelp='python $DIFOSS_ENV_BASE/py.help.py'
+alias pydir='python $DIFOSS_ENV_BASE/py.dir.py'
+alias pyv='python -c "import sys; print sys.version"'
+alias cd.py='cd /media/sf_software_develop_/python; alias f=f.py'
+
+alias pd=pydir
+alias ph=pyhelp
+
+# py2 personal path
+export PYTHONPATH=/home/chenruirong/.local
+export PATH=$PATH:$PYTHONPATH/bin
+alias pypath='python -c "import sys;print \"\n\".join(sys.path)"'
+###############################################################################
+# 编译相关
+alias m="find -maxdepth 1 -type f | grep --color=no -iE '(.*\.mak$)|(.*\.mk$)|(makefile)$' |awk -F / '{print $2}'| xargs -I {} make -f $1 {}"
+alias mc='m clean'
+alias mi='m install'
+alias c='cmake .'
+
+# find rfc*.txt
+alias f.rfc='find -type f -name "rfc*.txt" -print0 |xargs -0 grep -an --color=$COLOR_FLAG'
+
+###############################################################################
+# 爬虫相关
+## pwebs: Pick WEB, grep by Single quotes
+alias pwebs="awk -F \"[']\" '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
+## pwebd: Pick WEB, grep by Double quotes
+alias pwebd="awk -F'\"' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
+## geturl是pwebs、pwebd的混合版，使用 \047 代替单引号。后面可以再跟过滤用关键字（todo: 或者干脆紧跟URL规则的grep）
+alias geturl="awk -F'[\"|\047]' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
+# 下载全站网页
+alias getweb='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
+# 文件的减法
+alias filesub='python $DIFOSS_ENV_BASE/sub_file.py'
+
+###############################################################################
+# bash 相关
+alias b.reload='source $HOME/.bashrc'
+alias b.rc='vim $HOME/.bashrc && source $HOME/.bashrc'
+alias b.al='vim $DIFOSS_ENV_BASE/my_alias && source $DIFOSS_ENV_BASE/my_alias'
+
+###############################################################################
+# 目录相关
+alias ..="cd .."
+alias cd..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias -- -='cd -'
+# cd save : save where i am
+alias cds='echo "`pwd`" > ~/.cdsave'
+# cd back
+alias cdb='cd "`cat ~/.cdsave`"'
+
+###############################################################################
+## 函数类
+
+# 创建一个目录并跳转到
+# make a dir and cd into it
+mkcd(){
+    mkdir -pv "$@"
+    cd "$@"
+}

@@ -1,0 +1,1 @@
+@xfind . -type f | grep -E ".*\.py$" | xargs grep --color=auto -n %*

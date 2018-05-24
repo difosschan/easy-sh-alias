@@ -1,0 +1,7 @@
+#! /bin/sh
+#统计子目录中含有多少个txt文件
+echo -e "DIR\tCOUNT"
+echo "======================"
+for dir in `find . -type d`; do
+    echo -e "$dir\t" `find $dir -type f -name "*.txt" |wc -l`;
+done

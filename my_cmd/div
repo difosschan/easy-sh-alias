@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
+import os,sys
+
+argc=len(sys.argv)
+if argc < 3:
+    sys.stderr.write('''用法: div <分母> <分子>
+返回: 相除得出的数和余数，以及小数形式''')
+    exit(0)
+
+denominator = int(sys.argv[1])
+numerator = int(sys.argv[2])
+
+print denominator
+print numerator
+
+#print '%d / %d = %d : %d , decimal format: %f' % ( denominator, numerator, denominator / numerator, denominator % numerator, denominator / numerator )
+
+    
+#sys.stderr.write(cmd + '\n')
+

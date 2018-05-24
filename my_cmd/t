@@ -1,0 +1,2 @@
+#!/bin/sh
+perl $DIFOSS_ENV_BASE/time.pl $*

@@ -1,0 +1,1 @@
+@python "%DIFOSS_ENV_BASE%\py.dir.py" %*

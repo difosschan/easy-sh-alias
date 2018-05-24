@@ -1,0 +1,1 @@
+@grep --color=auto -na -E "#\s*include" %*

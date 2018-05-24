@@ -1,0 +1,1 @@
+@grep.exe --color=auto %*

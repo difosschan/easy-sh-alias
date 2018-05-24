@@ -1,0 +1,1 @@
+@astyle --delete-empty-lines %*

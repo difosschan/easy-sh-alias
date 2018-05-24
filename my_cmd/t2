@@ -1,0 +1,3 @@
+#!/bin/sh
+
+python `$CYGPATH -w "$DIFOSS_ENV_BASE/deal_time.py"` $*

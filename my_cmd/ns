@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+use Data::Dumper::Simple;
+my $ARGC = scalar @ARGV;
+if ($ARGC < 1) {
+    print "intention: watch 'netstat -anp | grep <grep_string>'\n".
+          "usage: $0 grep_string";
+    exit;
+}
+
+my $cmd = "watch -n 1 'netstat -anp | grep ";
+for ($i = 0; $i < $ARGC; $i++) {
+   $cmd .= @ARGV[$i];
+   $cmd .= " ";
+}
+$cmd .= "'";
+
+print "# ".$cmd;
+system ("$cmd");
