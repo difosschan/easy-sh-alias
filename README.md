@@ -4,7 +4,7 @@ Easy shell alias for developer.
 
 ## For Linux User
 
-modify **first line** in `.bashrc-example` in Project Diretory to indent this directory, and copy into `~/.bashrc` .
+Modify **first line** of file `.bashrc-example` in Project Diretory to indent this directory, and copy into `~/.bashrc` .
 
 ## For Cygwin/Msys2 User
 

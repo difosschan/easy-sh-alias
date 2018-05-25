@@ -143,10 +143,6 @@ alias cd.py='cd /media/sf_software_develop_/python; alias f=f.py'
 alias pd=pydir
 alias ph=pyhelp
 
-# py2 personal path
-export PYTHONPATH=/home/chenruirong/.local
-export PATH=$PATH:$PYTHONPATH/bin
-alias pypath='python -c "import sys;print \"\n\".join(sys.path)"'
 ###############################################################################
 # 编译相关
 alias m="find -maxdepth 1 -type f | grep --color=no -iE '(.*\.mak$)|(.*\.mk$)|(makefile)$' |awk -F / '{print $2}'| xargs -I {} make -f $1 {}"
