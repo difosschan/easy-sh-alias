@@ -8,10 +8,9 @@ modify 2st line in `.bashrc-example` in Project Diretory to indent this director
 
 ## For Cygwin/Msys2 User
 
-If you don't has `.bashrc` , modify 2st line in `.bashrc-example` in Project Diretory as follow:
+If you don't use `~/.bashrc` yet, modify 1st line of file `.bashrc-example` in Project Diretory as follow:
 
 ```bash
-#!/bin/sh
 export DIFOSS_ENV_BASE='/opt/easy-sh-alias'   # Modify here !
 
 if [ $DIFOSS_ENV_BASE ]; then
@@ -29,7 +28,7 @@ fi
 
 And copy it into `%HOMEPATH%/.bashrc` .
 
-Or use  `mklink.exe` tool in `cmd shell`  as follow:
+Or use  `mklink.exe` command in `Windows Shell (cmd)`  as follow:
 
 ```cmd
 mklink.exe %HOMEPATH%\.bashrc D:\easy-sh-alias\.privacy\.bashrc
