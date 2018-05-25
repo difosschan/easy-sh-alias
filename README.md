@@ -4,11 +4,11 @@ Easy shell alias for developer.
 
 ## For Linux User
 
-modify 2st line in `.bashrc-example` in Project Diretory to indent this directory, and copy into `~/.bashrc` .
+modify **first line** in `.bashrc-example` in Project Diretory to indent this directory, and copy into `~/.bashrc` .
 
 ## For Cygwin/Msys2 User
 
-If you don't use `~/.bashrc` yet, modify 1st line of file `.bashrc-example` in Project Diretory as follow:
+If you don't use `~/.bashrc` yet, modify **first line** of file `.bashrc-example` in Project Diretory as follow:
 
 ```bash
 export DIFOSS_ENV_BASE='/opt/easy-sh-alias'   # Modify here !

@@ -1,4 +1,3 @@
-#!/bin/sh
 export DIFOSS_ENV_BASE='/opt/easy-sh-alias'   # Modify here !
 
 if [ $DIFOSS_ENV_BASE ]; then
