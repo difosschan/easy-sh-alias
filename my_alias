@@ -4,7 +4,21 @@
 export SYSTEM_TYPE=`python -u -c 'import platform;print(platform.system())'`
 
 export PATH=$PATH:$DIFOSS_ENV_BASE/my_cmd
-export WEB_PICK_SHELL=$(realpath $DIFOSS_ENV_BASE/../web_pick/shell_)
+
+if [ -z `command -v realpath` ]; then
+    realpath () {
+        f=$@;
+        if [ -d "$f" ] ; then
+            base="";
+            dir="$f";
+        else
+            base="/$(basename "$f")";
+            dir=$(dirname "$f");
+        fi
+        dir=$(cd "$dir" && /bin/pwd);
+        echo "$dir$base"
+    }
+fi
 
 if [ "$SYSTEM_TYPE" == "Windows" ] ; then
 
