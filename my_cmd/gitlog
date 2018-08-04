@@ -1,2 +1,0 @@
-#!/bin/sh
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %cn %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative $*
