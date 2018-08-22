@@ -6,7 +6,8 @@ import os,sys
 argc=len(sys.argv)
 if argc == 1:
     sys.stderr.write('''usage: lc <keyword>
-intent: locate & hightlight the keyword (by grep).''')
+intent: locate & hightlight the keyword (by grep).
+''')
     exit(0)
 
 key_word = sys.argv[1]

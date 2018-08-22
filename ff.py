@@ -11,11 +11,11 @@ ff fileName: Find files
 
 ff word .py : Find content in files
 
-    find . -type f -name "*.[py]" | xargs -I{} sh -c "grep --color=auto -anH 'word'"
+    find . -type f -name "*.[py]" | xargs -I{} sh -c "grep --color=yes -anH 'word'"
 
 ff home -d : Find Directory
 
-    find . -type d | grep --color=auto -anH home '''
+    find . -type d | grep --color=yes -anH home '''
 
     if os.getenv('LANG') == 'C.GBK':
         print msg.decode('utf8')
@@ -94,16 +94,16 @@ def CombiseCommand():
     elif fileset['grep all object'] != []:
         key = 'grep all object'
         CheckContent()
-        #alias fs="find . -type f -name '*.*o'|awk '{printf (\"nm -A %s|cat -n\n\", \$0) }'|sh|grep -a --color=auto"
-        command = ''' find . -type f -name "*.o" | awk '{printf ("nm -A %%s|cat -n\\n", $0) }' | sh | grep --color=auto -anH '%s' ''' % content
+        #alias fs="find . -type f -name '*.*o'|awk '{printf (\"nm -A %s|cat -n\n\", \$0) }'|sh|grep -a --color=yes"
+        command = ''' find . -type f -name "*.o" | awk '{printf ("nm -A %%s|cat -n\\n", $0) }' | sh | grep --color=yes -anH '%s' ''' % content
     elif fileset['grep all file'] != []:
         key = 'grep all file'
         CheckContent()
-        command = ''' find . -type f | xargs -I{} sh -c "grep --color=auto -anH '%s' {}" ''' % content
+        command = ''' find . -type f | xargs -I{} sh -c "grep --color=yes -anH '%s' {}" ''' % content
     elif fileset['find dir'] != []:
         key = 'find dir'
         CheckContent()
-        command = ''' find . -type d | grep --color=auto -anH '%s' ''' % content
+        command = ''' find . -type d | grep --color=yes -anH '%s' ''' % content
     elif len( fileset['grep some postfix'] ) != 0 or len( fileset['grep some files'] ) != 0:
         CheckContent()
 
@@ -128,7 +128,7 @@ def CombiseCommand():
                 else:
                     files += ''' -o -name "%s"''' % f
                     i+=1
-        command = ''' find . %s%s | xargs -I{} sh -c "grep --color=auto -anH '%s' {}" ''' % ( postfix, files, content )
+        command = ''' find . %s%s | xargs -I{} sh -c "grep --color=yes -anH '%s' {}" ''' % ( postfix, files, content )
 
     return command
 
