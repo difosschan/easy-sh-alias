@@ -29,7 +29,13 @@ if [ "$SYSTEM_TYPE" == "Windows" ] ; then
     alias p='powershell -command "ps | head -3 ; ps |grep $*" ' # $* $@
 
     # Set alias for *.bat of `Git/cmd` diretory
-    alias e='explorer `cygpath -w $PWD`'
+    function e() {
+        if [ -z $1 ]; then
+            explorer `cygpath -w $PWD`
+        else
+            cygpath -w "`realpath $1`" | awk '{printf "explorer \"%s\"", $0}' | sh
+        fi
+    }
 
 elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     export CYGPATH=echo
@@ -190,12 +196,13 @@ alias filesub='python $DIFOSS_ENV_BASE/sub_file.py'
 ###############################################################################
 # Git
 alias gitlog="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
+alias gs="git status"
 
 ###############################################################################
 # bash 相关
 alias b.reload='source $HOME/.bashrc'
 alias b.rc='vim $HOME/.bashrc && source $HOME/.bashrc'
-alias b.al='vim $DIFOSS_ENV_BASE/my_alias && source $DIFOSS_ENV_BASE/my_alias'
+alias b.alias='vim $DIFOSS_ENV_BASE/my_alias && source $DIFOSS_ENV_BASE/my_alias'
 
 ###############################################################################
 # 目录相关
