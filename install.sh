@@ -10,3 +10,4 @@ fi
 # and replace current path instead of string "{{REALPATH_OF_PWD}}"
 cat bashrc_increment.template >> ~/.bashrc
 sed -i "s#{{REALPATH_OF_PWD}}#$PWD#g" ~/.bashrc
+source ~/.bashrc
