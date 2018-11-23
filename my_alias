@@ -133,6 +133,7 @@ alias f.pb='find . -type f -print0 | grep --color=no -zaiE "(\.proto$)" | xargs 
 alias f.js='find . -type f -print0 | grep --color=no -zaiE ".*\.(js|ts)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 
 alias f.go='find . -type f -print0 | grep --color=no -zaiE ".*\.(go)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.gosrc='find . -path "./vendor/*" -prune -o -name "*.go" -type f -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.lua='find . -type f -print0 | grep --color=no -zaiE ".*\.(lua)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.thrift='find . -type f -name "*.thrift" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 

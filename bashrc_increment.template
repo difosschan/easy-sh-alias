@@ -1,13 +1,12 @@
-export DIFOSS_ENV_BASE='{{REALPATH_OF_PWD}}'   # Modify here !
+
+export DIFOSS_ENV_BASE='{{REALPATH_OF_PWD}}'
 
 if [ $DIFOSS_ENV_BASE ]; then
     if [ -f $DIFOSS_ENV_BASE/my_alias ]; then
         source $DIFOSS_ENV_BASE/my_alias
     fi
-
     # Add user intimate aliases and functions in .privacy/__init__.sh
     if [ -f $DIFOSS_ENV_BASE/.privacy/__init__.sh ]; then
         source $DIFOSS_ENV_BASE/.privacy/__init__.sh
     fi
-
 fi
