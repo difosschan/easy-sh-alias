@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # check whether $DIFOSS_ENV_BASE environment variable
 if [ $DIFOSS_ENV_BASE ];then

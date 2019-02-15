@@ -117,7 +117,7 @@ alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$
 # find in header of header files of C/C++ ( file suffix: h,hpp,hxx )
 alias f.h='find . -type f -print0 | grep --color=no -zaiE ".*\.(hpp|h|hh|hxx)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 # find in makefiles ( file name: M/makefile, *.mk, *.mak )
-alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
+alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)|(WORKSPACE$)|(\.bzl$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
 
 #---------------------------
 alias f.syslog="find /var/log -type f -name 'syslog' | xargs grep -aH --color=\$COLOR_FLAG"
@@ -137,6 +137,9 @@ alias f.gosrc='find . -path "./vendor/*" -prune -o -name "*.go" -type f -print0 
 alias f.lua='find . -type f -print0 | grep --color=no -zaiE ".*\.(lua)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.thrift='find . -type f -name "*.thrift" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 
+alias f.bazel='find -type f -name BUILD -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias bn='find -type f -name BUILD -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG name| grep'
+
 # Set default `f` for MOST quickly find
 alias f 2<&- 1<&-
 if [ $? -eq 1 ]; then
@@ -146,9 +149,10 @@ fi
 #---------------------------
 ## <need other files>
 # find symbol in *.*o
-alias f.o="find . -type f -name '*.*o' |awk '{printf (\"nm -A \047%s\047 |cat -n\n\", \$0) }'|sh|grep -a --color=\$COLOR_FLAG"
+alias f.o='find . -type f -print0 | grep --color=no -zaiE ".*(.o|.so)$" |awk '\''{printf ("nm -AC \047%s\047 |cat -n\n", $0) }'\'' |sh|grep -a --color=$COLOR_FLAG'
 # read symbol in *.*o (transfer 'low-level name' into 'C++ readable name' by <find_symbol_in_so.pl>)
-alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pl'
+alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pli'
+alias f.so='find . -type f -print0 | grep --color=no -zaiE ".*\.(so|o|lo|a|ar)$" | xargs -0 -I {} nm -C -A 2>/dev/null {} | grep -a --color=$COLOR_FLAG'
 # Provider: https://github.com/zeroleo12345
 alias ff='python $DIFOSS_ENV_BASE/ff.py'
 
@@ -187,7 +191,7 @@ alias pwebs="awk -F \"[']\" '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
 ## pwebd: Pick WEB, grep by Double quotes
 alias pwebd="awk -F'\"' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
 ## geturl是pwebs、pwebd的混合版，使用 \047 代替单引号。后面可以再跟过滤用关键字（todo: 或者干脆紧跟URL规则的grep）
-alias geturl="awk -F'[\"|\047]' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
+alias geturl="awk -F'[\"\047]' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
 # 下载全站网页
 alias getweb='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 # 文件的减法
@@ -218,12 +222,20 @@ alias cds='echo "`pwd`" > ~/.cdsave'
 # cd back
 alias cdb='cd "`cat ~/.cdsave`"'
 
+
+# entry last logout directory when login
+#if [ -f ~/.cd-last-logout ];then
+#    cd "`cat ~/.cd-last-logout`"
+#fi
+
+# exit and save lastest directory when logout
+alias exit='echo $PWD > ~/.cd-last-logout; exit'
+
 ###############################################################################
 ## 函数类
 
 # 创建一个目录并跳转到
 # make a dir and cd into it
 mkcd(){
-    mkdir -pv "$@"
-    cd "$@"
+    mkdir -pv "$@" && cd "$@"
 }
