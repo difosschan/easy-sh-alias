@@ -148,11 +148,9 @@ fi
 
 #---------------------------
 ## <need other files>
-# find symbol in *.*o
-alias f.o='find . -type f -print0 | grep --color=no -zaiE ".*(.o|.so)$" |awk '\''{printf ("nm -AC \047%s\047 |cat -n\n", $0) }'\'' |sh|grep -a --color=$COLOR_FLAG'
-# read symbol in *.*o (transfer 'low-level name' into 'C++ readable name' by <find_symbol_in_so.pl>)
-alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pli'
-alias f.so='find . -type f -print0 | grep --color=no -zaiE ".*\.(so|o|lo|a|ar)$" | xargs -0 -I {} nm -C -A 2>/dev/null {} | grep -a --color=$COLOR_FLAG'
+# read symbol in *.*o, but just 1 depth. (transfer 'low-level name' into 'C++ readable name' by <find_symbol_in_so.pl>)
+alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pl'
+alias f.so='find . -type f -print0 | grep --color=no -zaiE ".*\.(so|o|lo|a|ar)$" |xargs -0 nm -CA 2>/dev/null | grep -a --color=$COLOR_FLAG'
 # Provider: https://github.com/zeroleo12345
 alias ff='python $DIFOSS_ENV_BASE/ff.py'
 
