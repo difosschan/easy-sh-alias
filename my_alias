@@ -42,8 +42,7 @@ elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     export IP_ETH0=`ip -f inet address show  | grep -A 1 -E "[[:digit:]]+\: eth0:" | tail -1 | awk -F"[ //]+" '{print $3}'`
     # ifconfig eth0| sed -n "2p"| awk -F"[ :]+" '{i=1;while(i<NF){print $i;i++}}' | grep -E "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+"|head -1
 
-    #export PS1="\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_ETH0\e[0m] \e[35;2m\w\e[0m\n$ "
-    export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m192.168.56.102\e[0m] \e[35;2m\w\e[0m \e[36m$(__git_ps1 "(%s)")\e[0m\n$ '
+    export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m192.168.56.102\e[0m] \e[35;2m\w\e[0m\e[36m$(__git_ps1 " (%s)")\e[0m\n$ '
 
 
     ## old version of 'p'
