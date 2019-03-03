@@ -103,6 +103,7 @@ alias seecfg='grep -P "^\s*[^#]+"'
 alias seecfgn='grep -nP "^\s*[^#]+"'
 alias seeenv='python $DIFOSS_ENV_BASE/see_env.py'
 
+alias g='grep -nrI --color=$COLOR_FLAG'
 alias gi="grep -naE '#\s*include'"
 
 alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
