@@ -201,9 +201,11 @@ alias filesub='python $DIFOSS_ENV_BASE/sub_file.py'
 
 ###############################################################################
 # Git
-alias gitlog="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
 alias gs="git status"
-
+alias gb='git branch -vva'
+alias gc='git checkout'
+alias gitlog=gl
 ###############################################################################
 # bash 相关
 alias b.reload='source $HOME/.bashrc'
