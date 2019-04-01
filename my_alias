@@ -108,7 +108,7 @@ alias gi="grep -naE '#\s*include'"
 
 alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
 
-alias f.java='find . -type f -name "*.java" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.java='grep -rIaHn --include="*.java" --color=$COLOR_FLAG'
 
 # find callback
 alias f.cb='find_callback(){ str="[>\.]+\s*"$@"\s*\("; find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnP --color=$COLOR_FLAG $str; }; find_callback'
@@ -206,6 +206,7 @@ alias gs="git status"
 alias gb='git branch -vva'
 alias gc='git checkout'
 alias gitlog=gl
+alias git.unset-credential='git config --system --unset credential.help'
 ###############################################################################
 # bash 相关
 alias b.reload='source $HOME/.bashrc'
