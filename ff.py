@@ -1,5 +1,8 @@
 #!/usr/bin/python
 #coding:utf-8
+
+# already 2to3
+
 import sys, os
 
 def Usage():
@@ -18,9 +21,9 @@ ff home -d : Find Directory
     find . -type d | grep --color=yes -anH home '''
 
     if os.getenv('LANG') == 'C.GBK':
-        print msg.decode('utf8')
+        print(msg.decode('utf8'))
     else:
-        print msg
+        print(msg)
 
 def CheckContent():
     global content
@@ -30,7 +33,7 @@ def CheckContent():
 
 def db(*args):
     global g_debug
-    if g_debug: print args
+    if g_debug: print(args)
 
 fileset = {
         'just find':[],
