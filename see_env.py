@@ -40,7 +40,7 @@ class SeeEnv(object):
                 env_arr = env_str.split(':')
 
             print_info('', env_show_name)
-            print '%s' % '\n'.join(env_arr)
+            print('%s' % '\n'.join(env_arr) )
 
 
 if __name__ == '__main__':
