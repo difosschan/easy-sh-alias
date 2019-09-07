@@ -314,7 +314,7 @@ alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$
 # find in header of header files of C/C++ ( file suffix: h,hpp,hxx )
 alias f.h='find . -type f -print0 | grep --color=no -zaiE ".*\.(hpp|h|hh|hxx)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 # find in makefiles ( file name: M/makefile, *.mk, *.mak )
-alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)|(WORKSPACE$)|(\.bzl$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
+alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)|(WORKSPACE$)|(\.bzl$)|(\.gradle$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
 
 #---------------------------
 alias f.syslog="find /var/log -type f -name 'syslog' | xargs grep -aH --color=\$COLOR_FLAG"
