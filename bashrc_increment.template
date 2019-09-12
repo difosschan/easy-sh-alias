@@ -8,5 +8,6 @@ if [ $DIFOSS_ENV_BASE ]; then
     # Add user intimate aliases and functions in .privacy/__init__.sh
     if [ -f $DIFOSS_ENV_BASE/.privacy/__init__.sh ]; then
         source $DIFOSS_ENV_BASE/.privacy/__init__.sh
+        alias b.privacy='vim $DIFOSS_ENV_BASE/.privacy/__init__.sh && source $DIFOSS_ENV_BASE/.privacy/__init__.sh'
     fi
 fi
