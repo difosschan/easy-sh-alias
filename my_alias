@@ -1,10 +1,37 @@
 #!/bin/sh
 
 ###############################################################################
-export SYSTEM_TYPE=`python -u -c 'import platform;print(platform.system())'`
+export SYSTEM_TYPE=`python2 -u -c 'import platform;print(platform.system())'`
 
-export PATH=$PATH:$DIFOSS_ENV_BASE/my_cmd
+function seeenv() {
+    if [ $# -eq 1 ]; then
+        local env_var_name=$1
+        local env_val=$(env|grep --color=no -E "^$env_var_name="| awk -F'=' '{print $2}')
+            echo "$env_val" | awk -F':' '{ for (i = 1; i <= NF; ++i) printf("%s\n", $i) } '
+    else
+        echo 'Usage: seeenv <env_var_name>'>&2
+    fi
+}
 
+# 不重复地添加环境变量
+function export_no_dup() {
+    if [ $# -eq 2 ]; then
+        local key=$1
+        local member=$2
+        local env_val=$(env|grep --color=no -E "^$key=(.*)$"| awk -F'=' '{print $2}')
+        local cnt=$(seeenv $key | grep -E "^$member\$" | wc -l)
+
+        if [ $cnt -eq 0  ]; then
+            local export_cmd=`printf 'export %s=$%s:"%s"' $key "$key"  "$member" `;
+            # echo $export_cmd -- for test
+            eval $export_cmd
+        fi
+    else
+        echo 'Usage: export_no_dup <env_var_name> <member>'>&2
+    fi
+}
+
+export_no_dup PATH "$DIFOSS_ENV_BASE/my_cmd"
 
 if [ -z `command -v realpath` ]; then
     realpath () {
@@ -26,7 +53,8 @@ if [ "$SYSTEM_TYPE" == "Windows" ] ; then
     # Config Cygwin Here ------------------------------------
     export CYGPATH=cygpath.exe
 
-    alias p='powershell -command "ps | head -3 >&2; ps |grep $*" ' # $* $@
+    # alias p='powershell -command "ps | head -3 ; ps |grep $*" ' # $* $@
+    alias p='ps -ef | grep'
 
     # Set alias for *.bat of `Git/cmd` diretory
     function e() {
@@ -242,13 +270,11 @@ function  __git_ps1 ()
     export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st\e[0m] \e[35;2m\w\e[0m\e[36m$(__git_ps1 " (%s)")\e[0m\n$ '
     PROMPT_COMMAND='export PS1="`echo $PS1` "'
 
-    ## old version of 'p'
-    #alias p='echo -e "PID\tPPID\tCMD"; ps -eo "%P %p %c %a" -u $LOGNAME|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
-
     alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
 else
     echo Unknown System Type !
 fi
+
 
 # if [ "$OSTYPE" == $"linux-gnu" ]; then          ######### linux-gnu system
 #    alias shutdown='echo'  # 防止错误关机
@@ -306,7 +332,6 @@ ulimit -c unlimited
 # see config file
 alias seecfg='grep -P "^\s*[^#]+"'
 alias seecfgn='grep -nP "^\s*[^#]+"'
-alias seeenv='python $DIFOSS_ENV_BASE/see_env.py'
 
 alias g='grep -nrI --color=$COLOR_FLAG'
 alias gi="grep -naE '#\s*include'"
@@ -331,7 +356,7 @@ alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)
 alias f.syslog="find /var/log -type f -name 'syslog' | xargs grep -aH --color=\$COLOR_FLAG"
 #alias cl.syslog="cp /var/log/syslog /var/log/syslog-`date +%Y-%m-%d`.bak; cat /dev/null > /var/log/syslog"
 alias f.log='find . -type f -name "*.log" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
-alias f.ini='find . -type f -print0 | grep --color=no -zaiE ".*\.(ini|cfg|conf|xml|json)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.ini='find . -type f -print0 | grep --color=no -zaiE ".*\.(ini|cfg|conf|xml|json|yaml)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 
 alias f.php='find . -type f -name "*.php" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.sql='find . -type f -name "*.sql" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
@@ -360,7 +385,7 @@ fi
 alias f.symbol='perl $DIFOSS_ENV_BASE/find_symbol_in_so.pl'
 alias f.so='find . -type f -print0 | grep --color=no -zaiE ".*\.(so|o|lo|a|ar)$" |xargs -0 nm -CA 2>/dev/null | grep -a --color=$COLOR_FLAG'
 # Provider: https://github.com/zeroleo12345
-alias ff='python $DIFOSS_ENV_BASE/ff.py'
+alias ff='python2 $DIFOSS_ENV_BASE/ff.py'
 
 #---------------------------
 # find py
@@ -372,13 +397,17 @@ alias pyfn='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*def\s+" |
 alias pyfc='find -type f -name "*.py" -print0 |xargs -0 grep -anvE "^\s*def\s+" |grep -0 --color=$COLOR_FLAG'
 alias pyc='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*class\s+" |grep -0 --color=$COLOR_FLAG'
 
-alias pyhelp='python $DIFOSS_ENV_BASE/py.help.py'
-alias pydir='python $DIFOSS_ENV_BASE/py.dir.py'
-alias pyv='python -c "import sys; print sys.version"'
+alias pydir='python2 $DIFOSS_ENV_BASE/py.dir.py'
+alias pyhelp='python3 $DIFOSS_ENV_BASE/py.help.py'
+alias py2dir='python2 $DIFOSS_ENV_BASE/py.dir.py'
+alias py2help='python3 $DIFOSS_ENV_BASE/py.help.py'
+alias pyv='python2 -c "import sys; print sys.version"'
 alias cd.py='cd /media/sf_software_develop_/python; alias f=f.py'
 
 alias pd=pydir
 alias ph=pyhelp
+alias pd2=pydir
+alias ph2=py2help
 
 ###############################################################################
 # 编译相关
@@ -401,7 +430,7 @@ alias geturl="awk -F'[\"\047]' '{i=1;while(i<NF) {printf(\"%s\n\", \$i);i++}}'"
 # 下载全站网页
 alias getweb='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 # 文件的减法
-alias filesub='python $DIFOSS_ENV_BASE/sub_file.py'
+alias filesub='python2 $DIFOSS_ENV_BASE/sub_file.py'
 
 
 ###############################################################################
@@ -410,6 +439,7 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset 
 alias gs="git status"
 alias gb='git branch -vva'
 alias gc='git checkout'
+alias gd='git diff'
 alias gitlog=gl
 alias git.unset-credential='git config --system --unset credential.help'
 ###############################################################################

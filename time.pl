@@ -9,8 +9,9 @@ if (scalar @ARGV >= 1) {
   $timestamp = $ARGV[0];
 } else {
   $timestamp = time;
-  printf("%s\n", $timestamp);
 }
+printf("%s\n", $timestamp);
+
 my($sec, $min, $hour, $day, $mon, $year, $wday, $yday, $isdst) = localtime $timestamp;
 printf("timestr: %04d-%02d-%02d %02d:%02d:%02d\n", $year+1900, $mon+1, $day, $hour, $min, $sec);
 
