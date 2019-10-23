@@ -18,11 +18,23 @@ function export_no_dup() {
     if [ $# -eq 2 ]; then
         local key=$1
         local member=$2
-        local env_val=$(env|grep --color=no -E "^$key=(.*)$"| awk -F'=' '{print $2}')
-        local cnt=$(seeenv $key | grep -E "^$member\$" | wc -l)
+        local len_of_member=$(expr length "$member")
+        
+        local env_val=$(env | grep --color=no -E "^$key=(.*)$" | awk -F'=' '{print $2}')
+
+        local cnt=$(seeenv $key \
+            | xargs -I{} expr match "$member" {} \
+            | grep -v "0" \
+            | xargs -I{} expr {} '==' $len_of_member \
+            | wc -l)
 
         if [ $cnt -eq 0  ]; then
-            local export_cmd=`printf 'export %s=$%s:"%s"' $key "$key"  "$member" `;
+            local export_cmd
+            if [ -z $env_val ]; then
+                export_cmd=`printf 'export %s="%s"'  $key "$member" `;
+            else
+                export_cmd=`printf 'export %s="$%s:%s"' $key "$key"  "$member" `;
+            fi
             # echo $export_cmd -- for test
             eval $export_cmd
         fi
