@@ -385,11 +385,11 @@ alias f.thrift='find . -type f -name "*.thrift" -print0 | xargs -0 grep -aHn --c
 alias f.bazel='find -type f -name "BUILD*" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias bn='find -type f -name BUILD -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG name| grep'
 
-# Set default `f` for MOST quickly find
-alias f 2<&- 1<&-
-if [ $? -eq 1 ]; then
-    alias f=f.c++
-fi
+# Set default `f` for MOST quickly find ( Unremark & change the following as your wish )
+# alias f 2<&- 1<&-
+# if [ $? -eq 1 ]; then
+#     alias f=f.c++
+# fi
 
 #---------------------------
 ## <need other files>
