@@ -3,6 +3,19 @@
 ###############################################################################
 export SYSTEM_TYPE=`python2 -u -c 'import platform;print(platform.system())'`
 
+# check whether the alias exists, return 1 if it already exists.
+function check_alias() {
+    #echo '$# = ' $#
+    if [ $# -eq 1 ]; then
+        local ailas_name=$1
+        alias $ailas_name 2<&- 1<&-
+        if [ $? -eq 0 ]; then
+            return 1
+        fi
+    fi
+    return 0
+}
+
 function seeenv() {
     if [ $# -eq 1 ]; then
         local env_var_name=$1
