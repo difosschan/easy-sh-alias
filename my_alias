@@ -3,6 +3,49 @@
 ###############################################################################
 export SYSTEM_TYPE=`python2 -u -c 'import platform;print(platform.system())'`
 
+function change_go_version() {
+    if [ $# -ne 1 ]; then
+        echo 'Usage: change_go_version <version>' >&2
+        return 0
+    fi
+
+    local allVersionsGoInPath=/data
+    local goVersion="$1"
+    local goRoot="$allVersionsGoInPath/go-$goVersion"
+    local goPath="$allVersionsGoInPath/gopath-$goVersion"
+
+    if [ ! -d $goRoot ]; then
+        echo "Directory <$goRoot> is not exist!" >&2
+        return 0
+    fi
+
+    local oldGOBIN
+    if [ -n "$GOBIN" ]; then
+        oldGOBIN="$GOBIN"
+    fi
+
+    if [ ! -d "$goPath" ]; then
+        mkdir "$goPath"
+    fi
+
+    if [ -L /usr/bin/go    ]; then  unlink /usr/bin/go;     fi
+    if [ -L /usr/bin/gofmt ]; then  unlink /usr/bin/gofmt;  fi
+    ln -s "$goRoot/bin/go"    /usr/bin/go
+    ln -s "$goRoot/bin/gofmt" /usr/bin/gofmt
+
+    export GOROOT="$goRoot"
+    export GOBIN="$GOROOT/bin"
+    export GOPATH="$goPath"
+
+    if [ -n "$oldGOBIN" ]; then
+        local newPATH=$(echo $PATH|sed s#$oldGOBIN#$GOBIN#)
+        export PATH=$newPATH
+    else
+        export PATH=$PATH:$GOBIN
+    fi
+    echo $(go version) >&2
+}
+
 # check whether the alias exists, return 1 if it already exists.
 function check_alias() {
     #echo '$# = ' $#
