@@ -11,3 +11,5 @@ fi
 cat bashrc_increment.template >> ~/.bashrc
 sed -i "s#{{REALPATH_OF_PWD}}#$PWD#g" ~/.bashrc
 source ~/.bashrc
+echo easy-alias-sh install done !
+

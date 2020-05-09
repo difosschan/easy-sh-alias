@@ -5,7 +5,7 @@ Easy shell alias for developer.
 ## How to install
 
 ```bash
-./install.sh
+sh install.sh
 ```
 
 Run `install.sh`  directly !
