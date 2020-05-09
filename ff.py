@@ -1,8 +1,6 @@
 #!/usr/bin/python
 #coding:utf-8
 
-# already 2to3
-
 import sys, os
 
 def Usage():

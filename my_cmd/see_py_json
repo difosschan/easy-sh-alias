@@ -1,0 +1,25 @@
+#!/bin/env python3
+# -*- coding:utf-8 -*-
+# author: difosschan
+# see python json dump which contain wide-charactor
+
+import sys, os, json
+
+Usage = '''Usage: python3 {file} <json filename/str>'''.format(
+    file=sys.argv[0].split(os.path.sep)[-1]
+)
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print(Usage, file=sys.stderr)
+        sys.exit(1)
+
+    fn = sys.argv[1]
+    o = ''
+    if os.path.isfile(fn):  # auto-adapt to filename
+        with open(fn, 'r', encoding='utf-8') as f:
+            o = json.load(f)
+    else:
+        o = json.loads(fn)  # auto-adapt to file content
+    print(json.dumps(o, ensure_ascii=False, indent=2))
+

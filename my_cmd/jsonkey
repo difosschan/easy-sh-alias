@@ -1,0 +1,62 @@
+#!/bin/env python3
+# -*- coding:utf-8 -*-
+# author: difosschan
+#
+
+import sys, os
+import simplejson as json
+from typing import Union, Any
+
+Usage = '''Usage: python3 {file} <key> <json filename/str>'''.format(
+    file=sys.argv[0].split(os.path.sep)[-1]
+)
+
+class GetKeyValue(object):
+    '''ref by: https://blog.csdn.net/weixin_42744102/article/details/99722187'''
+    def __init__(self, o: Union[str, Any]):
+        self.json_object = None
+        if isinstance(o, str):
+            self.json_object = json.loads(o)
+        else:
+            self.json_object = o
+
+        self.result_list = []
+
+    def search_key(self, key):
+        self.result_list = []
+        self.__search(self.json_object, key)
+        return self.result_list
+
+    def __search(self, json_object, key):
+
+        for k in json_object:
+            if k == key:
+                self.result_list.append(json_object[k])
+            if isinstance(json_object[k], dict):
+                self.__search(json_object[k], key)
+            if isinstance(json_object[k], list):
+                for item in json_object[k]:
+                    if isinstance(item, dict):
+                        self.__search(item, key)
+        return
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print(Usage, file=sys.stderr)
+        sys.exit(1)
+
+    key = sys.argv[1]
+    fn = sys.argv[2]
+    o = ''
+    if os.path.isfile(fn):  # auto-adapt to filename
+        with open(fn, 'r', encoding='utf-8') as f:
+            o = json.load(f)
+    else:
+        o = json.loads(fn)  # auto-adapt to file content
+
+    g = GetKeyValue(o)
+    res: list = g.search_key(key)
+    
+    if res:
+        print(json.dumps(res, ensure_ascii=False))
+
