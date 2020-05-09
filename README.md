@@ -38,7 +38,7 @@ Run `alias`  to see aliases this package add. Here are some common aliases:
 
   **purpose:** Quick find for c++ source files.
 
--  ``f.gosrc`
+-  `f.gosrc`
 
   **alias:**  `find . -path "./vendor/*" -prune -o -name "*.go" -type f -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG` 
 
