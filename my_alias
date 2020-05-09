@@ -2,7 +2,7 @@
 # shellcheck disable=SC1091,SC2155
 
 ###############################################################################
-export SYSTEM_TYPE=$(python2 -u -c 'import platform;print(platform.system())')
+export SYSTEM_TYPE=$(python -u -c 'import platform;print(platform.system())')
 
 function __df_change_go_version() {
     if [ $# -ne 1 ]; then
@@ -283,16 +283,12 @@ alias pyfn='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*def\s+" |
 alias pyfc='find -type f -name "*.py" -print0 |xargs -0 grep -anvE "^\s*def\s+" |grep -0 --color=$COLOR_FLAG'
 alias pyc='find -type f -name "*.py" -print0 |xargs -0 grep -anE "^\s*class\s+" |grep -0 --color=$COLOR_FLAG'
 
-alias pydir='python3 $DIFOSS_ENV_BASE/py.dir.py'
-alias pyhelp='python3 $DIFOSS_ENV_BASE/py.help.py'
-alias py2dir='python2 $DIFOSS_ENV_BASE/py.dir.py'
-alias py2help='python2 $DIFOSS_ENV_BASE/py.help.py'
-alias pyv='python2 -c "import sys; print sys.version"'
+alias pydir='python $DIFOSS_ENV_BASE/py.dir.py'
+alias pyhelp='python $DIFOSS_ENV_BASE/py.help.py'
+alias pyv='python -c "import sys; print(sys.version)"'
 
 alias pd=pydir
 alias ph=pyhelp
-alias pd2=pydir
-alias ph2=py2help
 
 # start pydoc on http://localhost:1234
 alias pydoc='nohup python -m pydoc -d -p 1234 2>&1 1>/dev/null &'
