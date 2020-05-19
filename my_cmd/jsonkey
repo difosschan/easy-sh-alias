@@ -6,8 +6,9 @@
 import sys, os
 import simplejson as json
 from typing import Union, Any
+import select
 
-Usage = '''Usage: python3 {file} <key> <json filename/str>'''.format(
+Usage = '''Usage: python3 {file} <key> [json filename/str]'''.format(
     file=sys.argv[0].split(os.path.sep)[-1]
 )
 
@@ -41,18 +42,28 @@ class GetKeyValue(object):
         return
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
+    ARGC = len(sys.argv)
+    if ARGC < 2:
         print(Usage, file=sys.stderr)
         sys.exit(1)
 
+    fn_or_str = ''
+    if ARGC == 2:
+        # only 1 parameter minds json_str comes from stdin. Waiting for it block.
+            if select.select([sys.stdin], [], []) == ([sys.stdin], [], []):
+                fn_or_str = sys.stdin.read()
+    else:
+        fn_or_str = sys.argv[2]
+
     key = sys.argv[1]
-    fn = sys.argv[2]
+
     o = ''
-    if os.path.isfile(fn):  # auto-adapt to filename
-        with open(fn, 'r', encoding='utf-8') as f:
+
+    if os.path.isfile(fn_or_str):  # auto-adapt to filename
+        with open(fn_or_str, 'r', encoding='utf-8') as f:
             o = json.load(f)
     else:
-        o = json.loads(fn)  # auto-adapt to file content
+        o = json.loads(fn_or_str)  # auto-adapt to file content
 
     g = GetKeyValue(o)
     res: list = g.search_key(key)
