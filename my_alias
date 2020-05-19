@@ -29,11 +29,6 @@ function __df_change_go_version() {
         mkdir "$goPath"
     fi
 
-    if [ -L /usr/bin/go    ]; then  unlink /usr/bin/go;     fi
-    if [ -L /usr/bin/gofmt ]; then  unlink /usr/bin/gofmt;  fi
-    ln -s "$goRoot/bin/go"    /usr/bin/go
-    ln -s "$goRoot/bin/gofmt" /usr/bin/gofmt
-
     export GOROOT="$goRoot"
     export GOBIN="$GOROOT/bin"
     export GOPATH="$goPath"
@@ -42,7 +37,8 @@ function __df_change_go_version() {
         local newPATH=$(echo $PATH|sed s#$oldGOBIN#$GOBIN#)
         export PATH=$newPATH
     else
-        export PATH=$PATH:$GOBIN
+        # export PATH with GOBIN at the front to avoid other paths pullute go, gofmt...
+        export PATH=$GOBIN:$PATH
     fi
     echo "$(go version)" >&2
 }
