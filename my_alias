@@ -144,9 +144,7 @@ elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     export ADDR_1st=`cat /proc/net/dev | awk '{i++; if(i>2){print $1}}'|grep -v lo| awk -F ':' '{print $1}'| head -1`
     export IP_1st=`ip -f inet address show | grep -A 1 -E "[[:digit:]]+\: $ADDR_1st:" | tail -1 | awk -F"[ //]+" '{print $3}'`
 
-    #export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st\e[0m] \e[35;2m\w\e[0m\e[36m$(__git_ps1 " (%s)")\e[0m\n$ '
     export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st\e[0m] \e[35;2m\w\e[0m\e[36m$(fast_git_ps1)\e[0m\n$ '
-    PROMPT_COMMAND='export PS1="`echo $PS1` "'
 
     alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
 else
