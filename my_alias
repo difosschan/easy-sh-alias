@@ -187,7 +187,8 @@ alias ls="ls --show-control-chars --color=auto -A"
 alias l='ls --show-control-chars --color=auto -Ah'
 alias ll='ls --show-control-chars --color=auto -lAh'
 alias lll='ls --show-control-chars --color=auto -lA'
-alias grep='grep --color=$COLOR_FLAG'
+alias grep='grep --color=$COLOR_FLAG --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+# alias grep='grep --color=$COLOR_FLAG'
 lsdir() {
     local dir='.'
     if [ $# != 0 ]; then
@@ -314,7 +315,8 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%ci)%Creset 
 alias gs="git status"
 alias gb='git branch -vva'
 alias gc='git checkout'
-alias gd='git diff'
+#alias gd='git diff'
+alias gd='git diff -w -U0 --word-diff-regex=[^[:space:]]'
 alias gitlog=gl
 alias git.unset-credential='git config --system --unset credential.help'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
