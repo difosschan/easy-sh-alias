@@ -56,7 +56,7 @@ function __df_check_alias() {
     return 0
 }
 
-
+# see environment variable split with ':' ( Or ';' on windows )
 function __df_see_env() {
     if [ $# -eq 1 ]; then
         local env_var_name=$1
@@ -70,25 +70,19 @@ function __df_see_env() {
 
 alias c.env='__df_see_env'
 
-# 不重复地添加环境变量
+# add environment variable without duplicate
 function __df_export_insert() {
     if [ $# -eq 2 ]; then
         local key=$1
         local member=$2
-        local len_of_member
-        local position=$3
-        len_of_member=$(expr length "$member")
-
+        
         #echo `date +'%H:%M:%S.%N'` "__df_export_insert $1 ---- 1">&2  # for test
+        
         local env_val
-        env_val=$(eval "echo \$$env_var_name")
+        env_val=$(eval "echo :\$$key:")
 
-        #echo `date +'%H:%M:%S.%N'` "__df_export_insert $1 ---- 2">&2  # for test
-        local is_contain
-        is_contain=$(echo $env_val \
-          | awk -F':' 'BEGIN {flag=0} {for (i = 1; i <= NF; ++i) if ($i == "$member") {flag=1; break} } END{print flag} ')
-        #echo `date +'%H:%M:%S.%N'` "__df_export_insert $1 ---- 3">&2  # for test
-
+        local is_contain=`echo $env_val | grep -c ":$member:"`
+        
         if [ $is_contain -eq 0  ]; then
             local export_cmd
             if [ -z "$env_val" ]; then
@@ -140,11 +134,13 @@ if [ "$SYSTEM_TYPE" == "Windows" ] ; then
 
 elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     export CYGPATH=echo
+    export HOSTNAME=`cat /etc/hostname`
     export IP_ETH0=`ip -f inet address show  | grep -A 1 -E "[[:digit:]]+\: eth0:" | tail -1 | awk -F"[ //]+" '{print $3}'`
     export ADDR_1st=`cat /proc/net/dev | awk '{i++; if(i>2){print $1}}'|grep -v lo| awk -F ':' '{print $1}'| head -1`
     export IP_1st=`ip -f inet address show | grep -A 1 -E "[[:digit:]]+\: $ADDR_1st:" | tail -1 | awk -F"[ //]+" '{print $3}'`
 
-    export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st\e[0m] \e[35;2m\w\e[0m\e[36m$(fast_git_ps1)\e[0m\n$ '
+    export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st  \033[4m$HOSTNAME\e[0m] \e[35;2m\w\e[0m\e[36m$(fast_git_ps1)\e[0m\n$ '
+    PROMPT_COMMAND='export PS1="`echo $PS1` "'
 
     alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
 else
@@ -165,20 +161,25 @@ fi
 # User specific aliases and functions
 
 # color flag effect `grep`, `ls` and so on...
+export GREP_COLOR="10;33"
 export COLOR_FLAG="auto"
-set_grep_color() {
+
+function __df_set_grep_color() {
     case "$#" in
-      1)
-        export COLOR_FLAG="$1"
-      ;;
+        1)
+            export COLOR_FLAG="$1"
+        ;;
+        *)
+            export COLOR_FLAG="auto"
+        ;;
     esac
 }
 
-alias grep.color.auto='set_grep_color auto'
-alias grep.color.yes='set_grep_color yes'
-alias grep.color.no='set_grep_color no'
+alias grep.color.auto='__df_set_grep_color auto'
+alias grep.color.yes='__df_set_grep_color yes'
+alias grep.color.no='__df_set_grep_color no'
 
-#### add default parameters to some command
+# add default parameters to some command
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
@@ -187,8 +188,7 @@ alias ls="ls --show-control-chars --color=auto -A"
 alias l='ls --show-control-chars --color=auto -Ah'
 alias ll='ls --show-control-chars --color=auto -lAh'
 alias lll='ls --show-control-chars --color=auto -lA'
-alias grep='grep --color=$COLOR_FLAG --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
-# alias grep='grep --color=$COLOR_FLAG'
+
 lsdir() {
     local dir='.'
     if [ $# != 0 ]; then
@@ -197,40 +197,37 @@ lsdir() {
     find $dir -maxdepth 1 -type d | awk -F './' '{if($2!="")print $2}'
 }
 
-
-# Let `grep` highlight
-export GREP_COLOR="10;33"
-
-#### short command
-#alias r='perl $DIFOSS_ENV_BASE/run.pl'
-
 # short for 'Grep Include'
 alias check='valgrind --tool=memcheck --track-fds=yes --leak-check=full --show-leak-kinds=definite'
 ulimit -c unlimited
 
 ###############################################################################
 # about Grep & Find
-# see config file
+
+## see config file
 alias c.cfg='grep -P "^\s*[^#]+"'
 alias c.cfg.numbering='grep -nP "^\s*[^#]+"'
 
+# Grep
 alias g='grep -nrI --color=$COLOR_FLAG'
-alias gi="grep -naE '#\s*include'"
+alias grep='grep --color=$COLOR_FLAG --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+alias f.include="grep -naE '#\s*include'"
 
-alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
-
+## find
 alias f.java='grep -rIaHn --include="*.java" --color=$COLOR_FLAG'
 
+### c++
+alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
 # find callback
 alias f.cb='find_callback(){ str="[>\.]+\s*"$@"\s*\("; find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnP --color=$COLOR_FLAG $str; }; find_callback'
 # find call
 alias f.call='find_call(){ str="[^a-zA-Z_]+"$@"\s*\("; find . -type f -print0 | grep --color=no -zaE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnp --color=$COLOR_FLAG $str; }; find_call'
 
-# find in implementation files of C/C++ ( file suffix: cpp,c,cxx,cc,C )
+#### find in implementation files of C/C++ ( file suffix: cpp,c,cxx,cc,C )
 alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
-# find in header of header files of C/C++ ( file suffix: h,hpp,hxx )
+#### find in header of header files of C/C++ ( file suffix: h,hpp,hxx )
 alias f.h='find . -type f -print0 | grep --color=no -zaiE ".*\.(hpp|h|hh|hxx)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
-# find in makefiles ( file name: M/makefile, *.mk, *.mak )
+#### find in makefiles ( file name: M/makefile, *.mk, *.mak )
 alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)|(WORKSPACE$)|(\.bzl$)|(\.gradle$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
 
 #---------------------------
@@ -311,13 +308,14 @@ alias html.fe.res='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 
 ###############################################################################
 # Git
-alias gl="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%ci)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
+alias gl="git log --oneline"
 alias gs="git status"
 alias gb='git branch -vva'
 alias gc='git checkout'
-#alias gd='git diff'
+alias gdd='git diff'
 alias gd='git diff -w -U0 --word-diff-regex=[^[:space:]]'
-alias gitlog=gl
+## show log with graph
+alias git.log="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%ci)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
 alias git.unset-credential='git config --system --unset credential.help'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
 alias gcb='git checkout "`cat ~/.git-checkout-save`"'
