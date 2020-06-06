@@ -315,7 +315,7 @@ alias gc='git checkout'
 alias gdd='git diff'
 alias gd='git diff -w -U0 --word-diff-regex=[^[:space:]]'
 ## show log with graph
-alias git.log="git log --graph --pretty=format:'%Cred%h%Creset - %Cgreen(%ci)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit --date=format:%c"
+alias gll="git log --graph --date=format-local:%c --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit "
 alias git.unset-credential='git config --system --unset credential.help'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
 alias gcb='git checkout "`cat ~/.git-checkout-save`"'

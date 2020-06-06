@@ -1,47 +1,47 @@
-#!/bin/sh
-#set -x   set +x
+#!/bin/bash
+
 usage() {
     if [[ "$LANG" == "C.GBK" ]]; then
 iconv -f 'utf-8' -t 'gbk' << EOF
 作用：解压文件
-        jieya fileName
+    decompress <fileName>
 example :
-        *.tar             tar -xvf
-        *.tar.gz          tar -xzf
-        *.tgz             tar -xzf
-        *.gz              gzip -d 或者 gunzip
-        *.tar.bz2         tar -xjf
-        *.bz2             bzip2 -d 或者 bunzip2
-        *.tar.Z           tar -xZf
-        *.Z               uncompress
-        *.rar             unrar  e
-        *.zip             unzip
-        *.tar.xz          tar xvf
-        *.xz              xz -d
+    *.tar             tar -xvf
+    *.tar.gz          tar -xzf
+    *.tgz             tar -xzf
+    *.gz              gzip -d 或者 gunzip
+    *.tar.bz2         tar -xjf
+    *.bz2             bzip2 -d -k 或者 bunzip2
+    *.tar.Z           tar -xZf
+    *.Z               uncompress
+    *.rar             unrar e
+    *.zip             unzip
+    *.tar.xz          tar -xvf
+    *.xz              xz -d -k
 EOF
     else
 iconv -f 'utf-8' -t 'utf-8' << EOF
 作用：解压文件
-        jieya fileName
+    decompress fileName
 example :
-        *.tar             tar -xvf
-        *.tar.gz          tar -xzf
-        *.tgz             tar -xzf
-        *.gz              gzip -d 或者 gunzip
-        *.tar.bz2         tar -xjf
-        *.bz2             bzip2 -d 或者 bunzip2
-        *.tar.Z           tar -xZf
-        *.Z               uncompress
-        *.rar             unrar  e
-        *.zip             unzip
-        *.tar.xz          tar xvf
-        *.xz              xz -d
+    *.tar             tar -xvf
+    *.tar.gz          tar -xzf
+    *.tgz             tar -xzf
+    *.gz              gzip -d 或者 gunzip
+    *.tar.bz2         tar -xjf
+    *.bz2             bzip2 -d 或者 bunzip2
+    *.tar.Z           tar -xZf
+    *.Z               uncompress
+    *.rar             unrar e
+    *.zip             unzip
+    *.tar.xz          tar -xvf
+    *.xz              xz -d -k
 EOF
     fi
 exit 0
 }
 
-#echo 参数个数: $#, \$1:$1, \$2:$2
+
 case $# in
     
     0)  usage;;
@@ -64,8 +64,8 @@ case $# in
         echo "  tar -jxvf  '$@'   "
         tar -jxvf $@
     elif [[ "$1" =~ \.bz2$ ]]; then
-        echo "  bzip2 -d '$@'   "
-        bzip2 -d $@
+        echo "  bzip2 -d -k '$@'   "
+        bzip2 -d -k $@
     elif [[ "$1" =~ \.tar.Z$ ]]; then
         echo "  tar -zxvf '$@'   "
         tar -zxvf $@
@@ -79,10 +79,10 @@ case $# in
         echo "  unzip '$@'   "
         unzip $@
     elif [[ "$1" =~ \.tar.xz$ ]]; then
-        echo "  tar xvf '$@'   "
-        xz -d $@
+        echo "  tar -xvf '$@'   "
+        tar -xvf $@
     elif [[ "$1" =~ \.xz$ ]]; then
-        echo "  xz -d '$@'   "
+        echo "  xz -d -k '$@'   "
         xz -d $@
     else
         echo "  unknow file type  "
