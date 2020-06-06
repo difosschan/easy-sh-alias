@@ -122,6 +122,8 @@ if [ "$SYSTEM_TYPE" == "Windows" ] ; then
 
     # alias p='powershell -command "ps | head -3 ; ps |grep $*" ' # $* $@
     alias p='ps -ef | grep'
+    # netstat
+    alias ns='netstat -ano | grep'
 
     # Set alias for *.bat of `Git/cmd` directory
     e() {
@@ -143,6 +145,8 @@ elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     PROMPT_COMMAND='export PS1="`echo $PS1` "'
 
     alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
+    # netstat
+    alias ns='netstat -anp | grep'
 else
     echo Unknown System Type !
 fi
@@ -421,4 +425,3 @@ function sendto() {
 
     return 0
 }
-
