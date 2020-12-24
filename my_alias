@@ -459,3 +459,6 @@ function sendto() {
     return 0
 }
 
+# let aliases available when using sudo
+alias sudo='sudo '
+
