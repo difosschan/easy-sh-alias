@@ -169,6 +169,7 @@ elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
     # netstat
     alias ns='netstat -anp | head -2 >&2; netstat -anp | grep'
+    alias nc.check='nc -v -w 1'
 else
     echo Unknown System Type !
 fi
@@ -225,7 +226,6 @@ lsdir() {
 
 # short for 'Grep Include'
 alias check='valgrind --tool=memcheck --track-fds=yes --leak-check=full --show-leak-kinds=definite'
-ulimit -c unlimited
 
 ###############################################################################
 # about Grep & Find
@@ -308,6 +308,27 @@ alias pyv='python -c "import sys; print(sys.version)"'
 alias pd=pydir
 alias ph=pyhelp
 
+function __df_py_reinstall() {
+    local module="$(basename `pwd`)"
+    if [[ "$#" -ge 1 ]]; then
+        module="$1"
+    fi
+    if [[ -z ""$module"" ]]; then
+      echo moudle name MUST NOT empty! >&2
+      return 1
+    fi
+
+    echo ======== re-install pymodule: $module ========
+    pip uninstall -y "$module"
+    local python_home=$(python -c "import pexpect; from os.path import realpath, dirname, join; print(realpath(join(dirname(pexpect.__file__), '..')))")
+    local module_egg_files=${module//-/_}
+    rm -rf "$python_home/$module_egg_files-*.egg"
+    rm -rf difoss_pyutil.egg-info/ build/ dist/ __pycache__/
+    python setup.py install
+}
+
+alias py.reinstall='__df_py_reinstall'
+
 # start pydoc on http://localhost:1234
 alias pydoc='nohup python -m pydoc -d -p 1234 2>&1 1>/dev/null &'
 ###############################################################################
@@ -334,47 +355,154 @@ alias html.fe.res='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 
 ###############################################################################
 # Git
-alias gl="git log --oneline"
 alias gs="git status"
 alias gb='git branch -vva'
 alias gc='git checkout'
 alias gd='git diff'
 alias gds='git diff -w -U0 --word-diff-regex=[^[:space:]]'
-## show log with graph
-alias gll="git log --graph --date=format-local:%c --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit "
+alias gcp='git cherry-pick'
+alias gcp.date='__df_git_cherry_pick_with_old_date'
+
+function __df_git_log_oneline() {
+    hash emojify > /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+        git log --oneline $@
+    else
+        git log --color=always --oneline $@ | emojify
+    fi
+}
+
+function __df_git_log_graphical_oneline() {
+    hash emojify > /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+        git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit  $@
+    else
+        git log --color=always --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit  $@ | emojify
+    fi
+}
+
+alias gl='__df_git_log_oneline'
+alias gll='__df_git_log_graphical_oneline'
 alias git.unset-credential='git config --system --unset credential.help'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
 alias gcb='git checkout "`cat ~/.git-checkout-save`"'
 alias git.sub-update='git submodule update --recursive --init --remote'
 alias git.sub-pull='git submodule foreach --recursive "git pull"'
 alias git.sub='git submodule'
-alias git.new-branch='git_new_branch'
+alias git.new-branch='__df_git_new_branch'
+alias git.del-branch='__df_git_del_branch'
+alias git.sub-del='__df_git_submodule_delete'
 
-function git_new_branch() {
+function __df_git_submodule_delete() {
+    if [[ "$#" -ne 1 ]]; then
+        echo 'Usage: __df_git_submodule_delete <submoudle-path>' >&2
+        return 1
+    fi
+    git submodule deinit "$1"
+    git rm --cached "$1"
+}
+
+function __df_git_new_branch() {
     local cur_branch=$(git name-rev --name-only HEAD)
     local base_branch=$cur_branch
     local tag_branch
     case "$#" in
         1)
-            tag_branch=$1
+            tag_branch="$1"
         ;;
 
         2)
-            base_branch=$1
-            tag_branch=$2
+            base_branch="$1"
+            tag_branch="$2"
 
             git checkout "$base_branch"
         ;;
 
         *)
-            echo 'Usage: git_new_branch <base_branch_name> <tag_branch_name>' >&2
-            return 0
+            echo 'Usage: __df_git_new_branch [base_branch_name] <tag_branch_name>' >&2
+            return 1
         ;;
     esac
 
     git checkout -b "$tag_branch"
     git push --set-upstream origin "$tag_branch"
     git branch -vv
+}
+
+function __df_git_del_branch() {
+    case "$#" in
+        1)
+            local branch="$1"
+        ;;
+        *)
+            echo 'Uasge: __df_git_del_branch <branch_name> >&2'
+            return 1
+        ;;
+    esac
+    git checkout master
+    git branch -d $branch
+    git push origin :$branch
+}
+
+function __df_ext_params() {
+    local fronts=()
+    local chr_picks=()
+    
+    for arg in "$@"
+    do
+        echo "arg[$i]: $arg"
+        echo len of : ${#chr_picks[*]}
+        if [[ "$arg" =~ ^-.* ]] || [[ ${#chr_picks[*]} -ne 0 ]]; then
+            chr_picks[${#chr_picks[*]}]="$arg"
+        else
+            fronts[${#fronts[*]}]="$arg"
+        fi
+    done
+    # <debug>
+    #echo '$fronts   (len='"${#fronts[*]}"'):' ${fronts[@]}
+    #echo '$chr_picks(len='"${#chr_picks[*]}"'):' ${chr_picks[@]}
+}
+
+function __df_git_cherry_pick_with_old_date() {
+    local fronts=()
+    local chr_picks=()
+    for arg in "$@"
+    do
+        if [[ "$arg" =~ ^-.* ]] || [[ ${#chr_picks[*]} -ne 0 ]]; then
+            chr_picks[${#chr_picks[*]}]="$arg"
+        else
+            fronts[${#fronts[*]}]="$arg"
+        fi
+    done
+    
+    local len_fronts=${#fronts[*]}
+    if [[  $len_fronts -eq 0 ]]; then
+        echo 'Usage: git_cherry_pick_to_keep_time <commit_id> [git_author_date] [commiter_date] [git-cherry-pick OPTIONS...]' >&2
+        return 1
+    fi
+    
+    local commit_id=${fronts[0]}
+    local git_author_date=`git log --date=iso --abbrev-commit --pretty=format:'%cd' $commit_id | head -1`
+    local commiter_date="$git_author_date"
+
+    case "$len_fronts" in
+        1);;
+        2)
+            git_author_date="$2"
+            commiter_date="$git_author_date"
+        ;;
+
+        3)
+            git_author_date="$2"
+            commiter_date="$3"
+        ;;
+    esac
+
+    if [ -z commiter_date ]; then
+        git cherry-pick "${chr_picks[@]]}" $commit_id
+    else
+        GIT_AUTHOR_DATE="$git_author_date" GIT_COMMITTER_DATE="$commiter_date" git cherry-pick "${chr_picks[@]]}" $commit_id
+    fi
 }
 
 function fast_git_ps1 () {
@@ -462,3 +590,5 @@ function sendto() {
 # let aliases available when using sudo
 alias sudo='sudo '
 
+# manual in Chinese
+alias cman='man -M /usr/local/share/man/zh_CN'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 
 import os,sys
@@ -12,10 +12,11 @@ if argc < 3:
 denominator = int(sys.argv[1])
 numerator = int(sys.argv[2])
 
-print denominator
-print numerator
+# print(denominator)
+# print(numerator)
 
-#print '%d / %d = %d : %d , decimal format: %f' % ( denominator, numerator, denominator / numerator, denominator % numerator, denominator / numerator )
+print('%d / %d = %d : %d , decimal format: %f'
+      % ( denominator, numerator, denominator / numerator, denominator % numerator, denominator / numerator ))
 
     
 #sys.stderr.write(cmd + '\n')
