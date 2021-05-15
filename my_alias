@@ -85,7 +85,9 @@ function __df_see_env() {
         local env_val=$(eval "echo \$$env_var_name")
         echo "$env_val" | awk -F':' '{ for (i = 1; i <= NF; ++i) printf("%s\n", $i) } '
     else
-        echo 'Usage: seeenv <env_var_name>'>&2
+        echo 'Usage: c.env <env_var_name>'>&2
+        echo '  e.g. c.env PATH'>&2
+        __df_see_env PATH
     fi
 }
 
@@ -103,17 +105,12 @@ function __df_export_insert() {
         local env_val
         env_val=$(eval "echo :\$$key:")
 
-        local is_contain=`echo $env_val | grep -c ":$member:"`
+        local is_contain=$(echo :$env_val: | grep -c ":$member:")
 
-        if [ $is_contain -eq 0  ]; then
-            local export_cmd
-            if [ -z "$env_val" ]; then
-                export_cmd=`printf 'export %s="%s"'  $key "$member" `;
-            else
-                export_cmd=`printf 'export %s="$%s:%s"' $key "$key"  "$member" `;
-            fi
-            # echo $export_cmd >&2  # for test
-            eval "$export_cmd";
+        if [ $is_contain -eq 0 ]; then
+            export $key="$member"
+        else
+            export $key="$env_val:$member"
         fi
     else
         echo 'Usage: __df_export_insert <env_var_name> <member>'>&2
