@@ -103,14 +103,20 @@ function __df_export_insert() {
         #echo `date +'%H:%M:%S.%N'` "__df_export_insert $1 ---- 1">&2  # for test
 
         local env_val
-        env_val=$(eval "echo :\$$key:")
+        env_val=$(eval "echo \$$key")
 
         local is_contain=$(echo :$env_val: | grep -c ":$member:")
-
+        
         if [ $is_contain -eq 0 ]; then
-            export $key="$member"
-        else
-            export $key="$env_val:$member"
+            local export_cmd=''
+            if [ -z "$env_val" ]; then
+                export_cmd=`printf 'export %s="%s"'  $key "$member" `;
+            else
+                export_cmd=`printf 'export %s="$%s:%s"' $key "$key"  "$member" `;
+            fi
+            
+            # echo $export_cmd >&2  # for test
+            eval "$export_cmd";
         fi
     else
         echo 'Usage: __df_export_insert <env_var_name> <member>'>&2
