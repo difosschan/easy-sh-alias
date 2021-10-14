@@ -63,7 +63,11 @@ if __name__ == '__main__':
         with open(fn_or_str, 'r', encoding='utf-8') as f:
             o = json.load(f)
     else:
-        o = json.loads(fn_or_str)  # auto-adapt to file content
+        try:
+            o = json.loads(fn_or_str)  # auto-adapt to file content
+        except:
+            print('$2 parameter is not a json string!', file=sys.stderr)
+            sys.exit(1)
 
     g = GetKeyValue(o)
     res: list = g.search_key(key)

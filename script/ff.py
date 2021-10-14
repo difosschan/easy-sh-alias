@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #coding:utf-8
 
-import sys, os
+import sys, os, subprocess
+from typing import Tuple
 
 def Usage():
     msg = '''Usage: find -name $2 | grep $1
@@ -74,11 +75,11 @@ def ParseArg():
         elif content == '':
             content = arg
         else:
-        
+
             key = 'grep all file'
             fileset[key].append(arg) if fileset[key] == [] else fileset[key].append(arg)
             db( key ,fileset[key] )
-            
+
             #raise Exception('too much content:\t%s' % ' '.join(sys.argv) )
 
 def CombiseCommand():
@@ -133,11 +134,26 @@ def CombiseCommand():
 
     return command
 
-g_debug = 0
-if __name__ == "__main__":
+def run_command(args) -> Tuple[str, str]:
+    out = err = ""
+    try:
+        with subprocess.Popen(args, shell=True,
+                              stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE) as p:
+            out = p.stdout.read().decode()[:-1]
+            err = p.stderr.read().decode()[:-1]
+    except Exception as e:
+        err = traceback.format_exc()
+    return out, err
+
+def main():
     ParseArg()
     command = CombiseCommand( )
     sys.stderr.write('%s\n' % command)
-    output = os.popen( command )
-    sys.stdout.write( output.read() )
 
+    s, _ = run_command(command)
+    print(s)
+
+
+g_debug = 0
+if __name__ == "__main__":
+    main()
