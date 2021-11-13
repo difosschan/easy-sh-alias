@@ -354,35 +354,22 @@ alias html.fe.res='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 # Git
 alias gs="git status"
 alias gb='git branch -vva'
-alias gc='git checkout'
+alias gco='git checkout'
+alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
+alias gcb='git checkout "`cat ~/.git-checkout-save`"'
+
 alias gd='git diff'
 alias gds='git diff -w -U0 --word-diff-regex=[^[:space:]]'
 alias gcp='git cherry-pick'
 alias gcp.date='__df_git_cherry_pick_with_old_date'
 
-function __df_git_log_oneline() {
-    hash emojify > /dev/null 2>&1
-    if [ "$?" != "0" ]; then
-        git log --oneline $@
-    else
-        git log --color=always --oneline $@ | emojify
-    fi
-}
+## git log in one line
+alias gl='git log --oneline --color=yes'
+alias gl.e='gl | emojify'
+alias gll="git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit $@"
+alias gll.e="git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit $@ | emojify"
 
-function __df_git_log_graphical_oneline() {
-    hash emojify > /dev/null 2>&1
-    if [ "$?" != "0" ]; then
-        git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit  $@
-    else
-        git log --color=always --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit  $@ | emojify
-    fi
-}
-
-alias gl='__df_git_log_oneline'
-alias gll='__df_git_log_graphical_oneline'
 alias git.unset-credential='git config --system --unset credential.help'
-alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
-alias gcb='git checkout "`cat ~/.git-checkout-save`"'
 alias git.sub-update='git submodule update --recursive --init --remote'
 alias git.sub-pull='git submodule foreach --recursive "git pull"'
 alias git.sub='git submodule'
