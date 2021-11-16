@@ -364,10 +364,10 @@ alias gcp='git cherry-pick'
 alias gcp.date='__df_git_cherry_pick_with_old_date'
 
 ## git log in one line
-alias gl='git log --oneline --color=yes'
-alias gl.e='gl | emojify'
+alias gl='git log --oneline'
+alias gl.e='gl --color | emojify'
 alias gll="git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit $@"
-alias gll.e="git log --graph --date=iso --pretty=format:'%Cred%h%Creset - %Cgreen(%cd)%Creset %C(yellow)%d%Creset %C(yellow reverse)%cn%Creset %s' --abbrev-commit $@ | emojify"
+alias gll.e="gll --color | emojify"
 
 alias git.unset-credential='git config --system --unset credential.help'
 alias git.sub-update='git submodule update --recursive --init --remote'
