@@ -377,6 +377,7 @@ alias html.fe.res='wget -c -t 3 -r -p -k -E -A=zip,jpg,jpeg,png,gif,html,css'
 alias gs="git status"
 alias gb='git branch -vva'
 alias gco='git checkout'
+alias gco.back='git checkout @{-1}'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
 alias gcb='git checkout "`cat ~/.git-checkout-save`"'
 
