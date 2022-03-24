@@ -153,6 +153,8 @@ function __df_change_org() {
         export ORG_ROOT="$2"
         alias f=f.$3
         alias git.user="git config --local user.name '$4' && git config --local user.email '$5'"
+    fi
+    if [[ ${PWD} != $org_root* ]]; then
         cd "$org_root"
     fi
 }
