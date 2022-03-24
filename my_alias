@@ -159,6 +159,9 @@ function __df_change_org() {
     fi
 }
 
+alias src='if [[ -n $ORG_ROOT-a  && -d "$ORG_ROOT/src_" ]];then cd $ORG_ROOT/src_; fi'
+alias doc='if [[ -n $ORG_ROOT-a  && -d "$ORG_ROOT/doc_" ]];then cd $ORG_ROOT/doc_; fi'
+
 if [ "$SYSTEM_TYPE" == "Windows" ] ; then
 
     # Config Cygwin Here ------------------------------------
