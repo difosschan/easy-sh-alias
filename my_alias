@@ -140,6 +140,23 @@ if [ -z `command -v realpath` ]; then
     }
 fi
 
+# Change organization
+function __df_change_org() {
+    local org_name="$1"
+    local org_root="$2"
+    local main_lang="$3"
+    local git_name="$4"
+    local git_email="$5"
+    if [ "$ORG_NAME" != "$org_name" ]; then
+        echo "Change org into $org_name"
+        export ORG_NAME="$1"
+        export ORG_ROOT="$2"
+        alias f=f.$3
+        alias git.user="git config --local user.name '$4' && git config --local user.email '$5'"
+        cd "$org_root"
+    fi
+}
+
 if [ "$SYSTEM_TYPE" == "Windows" ] ; then
 
     # Config Cygwin Here ------------------------------------
@@ -174,7 +191,7 @@ fi
 
 
 if [ "$TERM" == $"cygwin" ]; then  ##### cygwin, but not the original terminal
-    export PS1="\e[36;2m<\t> \e[32;2m[\u@\h] \e[35;2m\w\e[0m\n$ "
+    export PS1="\e[36;2m<\t>\e[0m [\e[33;2m\u@\e[32;2m\h\e[0m] \e[35;2m\w\e[0m\[\033[36m\]`__git_ps1`\e[0m\n$ "
 fi
 
 ###############################################################################
