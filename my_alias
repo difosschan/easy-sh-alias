@@ -30,34 +30,36 @@ function __df_change_go_version() {
         return 0
     fi
 
-    local allVersionsGoInPath=/data
-    local goVersion="$1"
-    local goRoot="$allVersionsGoInPath/go-$goVersion"
-    local goPath="$allVersionsGoInPath/gopath-$goVersion"
+    if [ -z "$GO_ALL_VERSION_BASE" ]; then
+        GO_ALL_VERSION_BASE=/data
+    fi
+    local go_version="$1"
+    local go_root="$GO_ALL_VERSION_BASE/go-$go_version"
+    local go_path="$GO_ALL_VERSION_BASE/gopath-$go_version"
 
-    if [ ! -d $goRoot ]; then
-        echo "Directory <$goRoot> is not exist!" >&2
+    if [ ! -d $go_root ]; then
+        echo "Directory <$go_root> is not exist!" >&2
         return 0
     fi
 
-    local go_old_path=$(which go 2>/dev/null)
-    local old_go=${go_old_path%*/go}
-    local oldGOBIN=${GOBIN}
+    local old_go_which=$(which go 2>/dev/null)
+    local old_go_in_path=${old_go_which%*/go}
+    local old_GOBIN=${GOBIN}
 
-    if [ ! -d "$goPath" ]; then
-        mkdir "$goPath"
+    if [ ! -d "$go_path" ]; then
+        mkdir "$go_path"
     fi
 
-    export GOROOT="$goRoot"
+    export GOROOT="$go_root"
     export GOBIN="$GOROOT/bin"
-    export GOPATH="$goPath"
+    export GOPATH="$go_path"
 
     local PATH_cleaned=$(echo $PATH)
-    if [ -n "$old_go" ]; then
-        PATH_cleaned=$(__df_export_remove PATH_cleaned "$old_go")
+    if [ -n "$old_go_in_path" ]; then
+        PATH_cleaned=$(__df_export_remove PATH_cleaned "$old_go_in_path")
     fi
-    if [ -n "$oldGOBIN" ]; then
-        PATH_cleaned=$(__df_export_remove PATH_cleaned "$oldGOBIN")
+    if [ -n "$old_GOBIN" ]; then
+        PATH_cleaned=$(__df_export_remove PATH_cleaned "$old_GOBIN")
     fi
 
     export PATH=$GOBIN:$PATH_cleaned
