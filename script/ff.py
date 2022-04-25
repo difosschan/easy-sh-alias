@@ -13,7 +13,7 @@ ff fileName: Find files
 
 ff word .py : Find content in files
 
-    find . -type f -name "*.[py]" | xargs -I{} sh -c "grep --color=yes -anH 'word'"
+    find . -type f -name "*.[py]" | xargs -I {} sh -c "grep --color=yes -anH 'word'"
 
 ff home -d : Find Directory
 
@@ -101,7 +101,7 @@ def CombiseCommand():
     elif fileset['grep all file'] != []:
         key = 'grep all file'
         CheckContent()
-        command = ''' find . -type f | xargs -I{} sh -c "grep --color=yes -anH '%s' {}" ''' % content
+        command = ''' find . -type f | xargs -I {} sh -c "grep --color=yes -anH '%s' {}" ''' % content
     elif fileset['find dir'] != []:
         key = 'find dir'
         CheckContent()
