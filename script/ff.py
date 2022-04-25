@@ -130,7 +130,7 @@ def CombiseCommand():
                 else:
                     files += ''' -o -name "%s"''' % f
                     i+=1
-        command = ''' find . %s%s | xargs -I{} sh -c "grep --color=yes -anH '%s' {}" ''' % ( postfix, files, content )
+        command = ''' find . %s%s | xargs -I {} sh -c "grep --color=yes -anH '%s' {}" ''' % ( postfix, files, content )
 
     return command
 
