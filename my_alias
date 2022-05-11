@@ -380,6 +380,7 @@ alias gs="git status"
 alias gb='git branch -vva'
 alias gco='git checkout'
 alias gco.back='git checkout @{-1}'
+alias g\-='git checkout @{-1}'
 alias gcs='echo "`git symbolic-ref -q --short HEAD`" > ~/.git-checkout-save'
 alias gcb='git checkout "`cat ~/.git-checkout-save`"'
 
