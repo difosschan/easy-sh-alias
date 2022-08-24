@@ -329,6 +329,13 @@ alias pyv='python -c "import sys; print(sys.version)"'
 alias pd=pydir
 alias ph=pyhelp
 
+alias py3dir='python3 $DIFOSS_ENV_BASE/script/py.dir.py'
+alias py3help='python3 $DIFOSS_ENV_BASE/script/py.help.py'
+alias py3v='python3 -c "import sys; print(sys.version)"'
+
+alias pd3=py3dir
+alias ph3=py3help
+
 function __df_py_reinstall() {
     local module="$(basename `pwd`)"
     if [[ "$#" -ge 1 ]]; then
