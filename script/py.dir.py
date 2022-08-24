@@ -44,7 +44,7 @@ if __name__ == '__main__':
             print('\n'.join( dir(eval('module.' + sub_modules))))
 
     except ImportError as ie:
-        print('\n'.join( dir( eval(argv1) )))
+        print(ie)
 
     except Exception as e:
         sys.stderr.write("Catch Exception {exp_type}: {reason}\n".format(exp_type=type(e), reason=e.__str__()))
