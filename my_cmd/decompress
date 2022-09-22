@@ -49,26 +49,26 @@ case $# in
     *)
 
     if [[ "$1" =~ \.tar$ ]]; then
-        echo "  tar -xvf '$@'   "
+        echo "  tar -xf '$@'   "
         tar -xvf $@
     elif [[ "$1" =~ \.tar.gz$ ]]; then
-        echo "  tar -zxvf '$@'   "
-        tar -zxvf $@
+        echo "  tar -zxf '$@'   "
+        tar -zxf $@
     elif [[ "$1" =~ \.tgz$ ]]; then
-        echo "  tar -zxvf '$@'   "
-        tar -zxvf $@
+        echo "  tar -zxf '$@'   "
+        tar -zxf $@
     elif [[ "$1" =~ \.gz$ ]]; then
-        echo "  tar -zxvf '$@'   "
-        tar -zxvf $@
+        echo "  tar -zxf '$@'   "
+        tar -zxf $@
     elif [[ "$1" =~ \.tar.bz2$ ]]; then
-        echo "  tar -jxvf  '$@'   "
-        tar -jxvf $@
+        echo "  tar -jxf  '$@'   "
+        tar -jxf $@
     elif [[ "$1" =~ \.bz2$ ]]; then
         echo "  bzip2 -d -k '$@'   "
         bzip2 -d -k $@
     elif [[ "$1" =~ \.tar.Z$ ]]; then
-        echo "  tar -zxvf '$@'   "
-        tar -zxvf $@
+        echo "  tar -zxf '$@'   "
+        tar -zxf $@
     elif [[ "$1" =~ \.Z$ ]]; then
         echo "  uncompress '$@'   "
         uncompress $@
@@ -79,8 +79,8 @@ case $# in
         echo "  unzip '$@'   "
         unzip $@
     elif [[ "$1" =~ \.tar.xz$ ]]; then
-        echo "  tar -xvf '$@'   "
-        tar -xvf $@
+        echo "  tar -xf '$@'   "
+        tar -xf $@
     elif [[ "$1" =~ \.xz$ ]]; then
         echo "  xz -d -k '$@'   "
         xz -d $@
