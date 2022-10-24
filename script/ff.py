@@ -134,7 +134,7 @@ def CombiseCommand():
 
     return command
 
-def run_command(args) -> Tuple[str, str]:
+def run_command(args): #-> Tuple[str, str]:
     out = err = ""
     try:
         with subprocess.Popen(args, shell=True,
