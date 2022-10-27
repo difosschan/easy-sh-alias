@@ -310,9 +310,8 @@ alias bn='find -type f -name BUILD -print0 | xargs -0 grep -aHn --color=$COLOR_F
 alias f.symbol='perl $DIFOSS_ENV_BASE/script/find_symbol_in_so.pl'
 alias f.so='find . -type f -print0 | grep --color=no -zaiE ".*\.(so|o|lo|a|ar)$" |xargs -0 nm -CA 2>/dev/null | grep -a --color=$COLOR_FLAG'
 # Provider: https://github.com/zeroleo12345
-alias ff='python $DIFOSS_ENV_BASE/script/ff.py'
 
-#---------------------------
+#--------------------------
 # find py
 alias pyf='find -type f -name "*.py" -print0 |xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.py='pyf'
