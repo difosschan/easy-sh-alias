@@ -263,9 +263,9 @@ alias f.java='grep -rIaHn --include="*.java" --color=$COLOR_FLAG'
 ### c++
 alias f.c++='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
 # find callback
-alias f.cb='find_callback(){ str="[>\.]+\s*"$@"\s*\("; find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnP --color=$COLOR_FLAG $str; }; find_callback'
+alias f.cb='find_callback(){ str="[>\.]+\s*"$@"\s*\("; find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG $str; }; find_callback'
 # find call
-alias f.call='find_call(){ str="[^a-zA-Z_]+"$@"\s*\("; find . -type f -print0 | grep --color=no -zaE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHnp --color=$COLOR_FLAG $str; }; find_call'
+alias f.call='find_call(){ str="[^a-zA-Z_]+"$@"\s*\("; find . -type f -print0 | grep --color=no -zaE ".*\.(cpp|hpp|c|h|hh|cxx|cc)$"|xargs -0 grep -aHn --color=$COLOR_FLAG $str; }; find_call'
 
 #### find in implementation files of C/C++ ( file suffix: cpp,c,cxx,cc,C )
 alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
