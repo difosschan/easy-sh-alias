@@ -273,6 +273,10 @@ alias f.cpp='find . -type f -print0 | grep --color=no -zaiE ".*\.(cpp|c|cxx|cc)$
 alias f.h='find . -type f -print0 | grep --color=no -zaiE ".*\.(hpp|h|hh|hxx)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 #### find in makefiles ( file name: M/makefile, *.mk, *.mak )
 alias f.mk="find . -type f -print0 | grep --color=no -zaiE '(\.mak$)|(\.c?make$)|(\.mk$)|(/.*makefile[^//]*$)|(/cmakelists.txt$)|(BUILD$)|(WORKSPACE$)|(\.bzl$)|(\.gradle$)|(go.mod$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
+#### find in Cmakelists.txt
+alias f.cmake="find . -type f -print0 | grep --color=no -zaiE '(/cmakelists.txt$)' | xargs -0 grep -aHn --color=\$COLOR_FLAG"
+alias cmake.clean='find . \( -type d -name "CMakeFiles" \) -o \( -type f -name "CMakeCache.txt" \) | xargs -I {} rm -rf {}'
+
 
 ### C#
 alias f.cs='find . -type f -print0 | grep --color=no -zaiE ".*\.(cs)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
@@ -285,7 +289,7 @@ alias f.ini='find . -type f -print0 | grep --color=no -zaiE ".*\.(ini|cfg|conf|x
 
 alias f.php='find . -type f -name "*.php" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.sql='find . -type f -name "*.sql" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
-alias f.md='find . -type f -name "*.md" -print0 | xargs -0 grep -aHn --color=$COLOR_FLAG'
+alias f.md='find . -type f -print0 | grep --color=no -zaiE ".*\.(md|rst)$"|xargs -0 grep -aHn --color=$COLOR_FLAG'
 alias f.pb='find . -type f -print0 | grep --color=no -zaiE "(\.proto$)" | xargs -0 grep -aHn --color=$COLOR_FLAG'
 
 alias f.js='find . -type f -print0 | grep --color=no -zaiE ".*\.(js|ts)$" | xargs -0 grep -aHn --color=$COLOR_FLAG'
