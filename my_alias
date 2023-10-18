@@ -198,7 +198,7 @@ elif [ "$SYSTEM_TYPE" == "Linux" ] ; then
     export PS1='\e[36;2m<\t>\e[0m[\e[33;2m\u@\e[32;2m$IP_1st  \033[4m$HOSTNAME\e[0m] \e[35;2m\w\e[0m\e[36m$(fast_git_ps1)\e[0m\n$ '
     PROMPT_COMMAND='export PS1="`echo $PS1` "'
 
-    alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:space:]]*[[:digit:]]+[[:space:]]+[[:digit:]]+[[:space:]]+grep"|grep'
+    alias p='ps -eo "%U %p %P %x %c %a"|head -1 >&2; ps -eo "%U %p %P %x %c %a"|egrep -vE "[[:digit:]]{2}:[[:digit:]]{2}:[[:digit:]]{2} grep"|grep'
     # netstat
     alias ns='netstat -anp | head -2 >&2; netstat -anp | grep'
     alias e='nautilus .'
