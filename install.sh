@@ -2,7 +2,7 @@
 
 # check whether $DIFOSS_ENV_BASE environment variable
 if [[ ! -z "$DIFOSS_ENV_BASE" ]]; then
-    echo "easy-sh-alias seems to be installed oon <$DIFOSS_ENV_BASE>."
+    echo "easy-sh-alias seems to be installed on <$DIFOSS_ENV_BASE>."
     exit 0
 fi
 
