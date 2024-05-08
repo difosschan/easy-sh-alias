@@ -1,0 +1,43 @@
+#!/bin/bash
+
+result_fn="url-list.txt"
+
+usage() {
+    if [[ "$LANG" == "C.GBK" ]]; then
+iconv -f 'utf-8' -t 'gbk' << EOF
+作用：使用 ffmpeg 把 m3u8 和 ts 合并为 $result_fn  （.mp4）文件中
+用法：
+    $(basename "$0") <FILENAME.mp4> [m3u8 fileName] 
+EOF
+    else
+iconv -f 'utf-8' -t 'utf-8' << EOF
+作用：使用 ffmpeg 把 m3u8 和 ts 合并为 $result_fn  （.mp4）文件中
+用法：
+    $(basename "$0") <FILENAME.mp4> [m3u8 fileName] 
+EOF
+    fi
+exit 0
+}
+
+
+case $# in
+    
+    0)  usage;;
+
+    1|2)
+        if [[ "$2" =~ \.m3u8 ]]; then
+            m3u8_fn="$2"
+        else
+            m3u8_fn=$(ls *.m3u8 | head -1)
+        fi
+        
+        echo "m3u8: $m3u8_fn"
+        
+        cmd="ffmpeg.exe -allowed_extensions ALL -i '"$(echo "$m3u8_fn")"' -c copy '"$(echo "$1")"'"
+        echo "cmd: $cmd "
+
+        # 成功后把 ts 删除
+        eval "$cmd" && rm -f *.ts
+        ;;
+        
+esac
