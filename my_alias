@@ -217,7 +217,13 @@ fi
 # User specific aliases and functions
 
 # color flag effect `grep`, `ls` and so on...
-export GREP_COLOR="10;33"
+
+if echo hello|grep --color=auto l >/dev/null 2>&1; then
+    export GREP_COLOR="mt=10;33"
+else
+    export GREP_COLOR="10;33"
+fi
+
 export COLOR_FLAG="auto"
 
 function __df_set_grep_color() {
